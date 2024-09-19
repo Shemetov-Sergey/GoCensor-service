@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/Shemetov-Sergey/GoCensor-service/pkg/config"
+	"github.com/Shemetov-Sergey/GoCensor-service/pkg/middleware"
 	"github.com/Shemetov-Sergey/GoCensor-service/pkg/pb"
 	"google.golang.org/grpc"
 )
@@ -14,7 +15,7 @@ type ServiceClient struct {
 
 func InitServiceClient(c *config.Config) pb.CensorServiceClient {
 	// using WithInsecure() because no SSL running
-	cc, err := grpc.Dial(c.CommentSvcUrl, grpc.WithInsecure())
+	cc, err := grpc.Dial(c.CommentSvcUrl, grpc.WithInsecure(), middleware.WithClientUnaryInterceptor())
 
 	if err != nil {
 		fmt.Println("Could not connect:", err)

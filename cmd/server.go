@@ -8,6 +8,7 @@ import (
 	"github.com/Shemetov-Sergey/GoCensor-service/pkg/client"
 	"github.com/Shemetov-Sergey/GoCensor-service/pkg/config"
 	"github.com/Shemetov-Sergey/GoCensor-service/pkg/db"
+	"github.com/Shemetov-Sergey/GoCensor-service/pkg/middleware"
 	"github.com/Shemetov-Sergey/GoCensor-service/pkg/pb"
 	"github.com/Shemetov-Sergey/GoCensor-service/pkg/services"
 	"google.golang.org/grpc"
@@ -37,7 +38,7 @@ func main() {
 		C: cli,
 	}
 
-	grpcServer := grpc.NewServer()
+	grpcServer := grpc.NewServer(grpc.UnaryInterceptor(middleware.LoggingInterceptor))
 
 	pb.RegisterCensorServiceServer(grpcServer, &s)
 
