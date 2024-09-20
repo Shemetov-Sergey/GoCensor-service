@@ -9,20 +9,34 @@ type Config struct {
 	CensorSvcUrl  string `mapstructure:"CENSOR_SVC_URL"`
 }
 
-func LoadConfig() (config Config, err error) {
+func LoadConfig() (Config, error) {
+	var c Config
 	viper.AddConfigPath("./pkg/config/envs")
-	viper.SetConfigName("dev")
+	viper.AddConfigPath("/GoAuthSvc") //Для docker
+
+	viper.SetConfigName("prod")
 	viper.SetConfigType("env")
 
 	viper.AutomaticEnv()
 
-	err = viper.ReadInConfig()
+	err := viper.ReadInConfig()
 
 	if err != nil {
-		return
+		viper.SetConfigName("dev")
+		viper.SetConfigType("env")
+		viper.AutomaticEnv()
+
+		err = viper.ReadInConfig()
+
+		if err != nil {
+			return Config{}, err
+		}
+		err = viper.Unmarshal(&c)
+
+		return c, nil
 	}
 
-	err = viper.Unmarshal(&config)
+	err = viper.Unmarshal(&c)
 
-	return
+	return c, nil
 }
