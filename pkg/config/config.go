@@ -12,7 +12,7 @@ type Config struct {
 func LoadConfig() (Config, error) {
 	var c Config
 	viper.AddConfigPath("./pkg/config/envs")
-	viper.AddConfigPath("/GoAuthSvc") //Для docker
+	viper.AddConfigPath("/GoCensor-service") //Для docker
 
 	viper.SetConfigName("prod")
 	viper.SetConfigType("env")
